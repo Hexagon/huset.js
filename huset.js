@@ -1,6 +1,6 @@
 	// Include node.js modules
-var   fs = require('fs')
-    , socketio = require('socket.io')
+var fs = require('fs')
+	, socketio = require('socket.io')
 	, telldus = require('telldus-core-js')
 	, path = require('path')
 
@@ -37,10 +37,10 @@ if( config.tellstick.enable === 1 ) {
 						out.type, \
 						max(out.ts) as ots \
 					 FROM  \
-					 	telldus_sensor_history as out \
+						telldus_sensor_history as out \
 					 GROUP BY \
-					 	out.id, \
-					 	out.type) as source \
+						out.id, \
+						out.type) as source \
 			LEFT OUTER JOIN \
 				telldus_sensor_history as dest ON (source.id = dest.id AND source.type=dest.type AND source.ots = dest.ts)";
 	datasource.db.each(
@@ -108,16 +108,16 @@ if( config.server.live_stream === 1 ) {
 		io.sockets.emit('message', { msg: 'initial_data' , data: cache });
 
 		// On incoming message callback (has currently no use)
-	    socket.on('message', function (data) {
-	    	
-	    	// Incoming!!
-	    	if( data.msg == 'telldus_device_on' ) {
-	    		telldus.turnOn(parseInt(data.id));
-	    	} else if ( data.msg == 'telldus_device_off' ) {
-	    		telldus.turnOff(parseInt(data.id));
-	    	}
+		 socket.on('message', function (data) {
+			
+			// Incoming!!
+			if( data.msg == 'telldus_device_on' ) {
+				telldus.turnOn(parseInt(data.id));
+			} else if ( data.msg == 'telldus_device_off' ) {
+				telldus.turnOff(parseInt(data.id));
+			}
 
-	    });
+		 });
 
 	});
 

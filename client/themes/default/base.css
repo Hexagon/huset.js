@@ -8,25 +8,25 @@ html {
 	background-image:url('img/bg_1280.jpg');
 	height:auto;
 	width:3000px;
-    font-family: 'Open Sans';
-    color: #FFFFFF;
-    padding-left: 30px;
-    padding-top:10px;
-    overflow-y: hidden; 
+	font-family: 'Open Sans';
+	color: #FFFFFF;
+	padding-left: 30px;
+	padding-top:10px;
+	overflow-y: hidden; 
 }
 
 /* Textformatering */
 h1, h2, h3, h4, h5, h6 {
-    margin: 0px;
-    margin-top:5px;
-    margin-bottom:0px;
-    padding-bottom:0px;
-    color: #999999;
-    font-weight:300;
+	margin: 0px;
+	margin-top:5px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+	color: #999999;
+	font-weight:300;
 }
 h2 {
-    color: #DDDDDD;
-    font-weight:300;
+	color: #DDDDDD;
+	font-weight:300;
 }
 strong {
 	font-weight:500;
@@ -187,9 +187,9 @@ strong {
 	html {
 
 		width:731px;
-	    padding-left: 10px;
-    	overflow-y: scroll; 
-    	overflow-x: scroll; 
+		padding-left: 10px;
+		overflow-y: scroll; 
+		overflow-x: scroll; 
 
 	}
 	
@@ -200,9 +200,9 @@ strong {
 
 	html {
 		width:431px;
-	    padding-left: 10px;
-    	overflow-y: scroll; 
-    	overflow-x: scroll; 
+		padding-left: 10px;
+		overflow-y: scroll; 
+		overflow-x: scroll; 
 	}
 
 	.box-w-100 {width:395px;}

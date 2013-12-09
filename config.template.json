@@ -3,12 +3,12 @@
 		"port": 8080,
 		"live_stream": 1,
 		"mimetypes": {
-		    "html": "text/html",
-		    "jpeg": "image/jpeg",
-		    "jpg": "image/jpeg",
-		    "png": "image/png",
-		    "js": "text/javascript",
-		    "css": "text/css"
+			"html": "text/html",
+			"jpeg": "image/jpeg",
+			"jpg": "image/jpeg",
+			"png": "image/png",
+			"js": "text/javascript",
+			"css": "text/css"
 		}
 	},
 	"triggers": {

@@ -14,15 +14,15 @@ module.exports = {
 					var data = JSON.parse(chunk),
 						spot_price = Math.round(data.data[0].value/10)/100,
 						full_price = Math.round((spot_price*100+config.elspot.price_premium+config.elspot.price_tax)*(1+(config.elspot.price_vat_percentage/100))*10)/10;
-			    	this.onNowUpdate({'spot_price':spot_price,'full_price':full_price});
-			    } catch ( e ) {
-			    	console.log ('elspot request failed: Invalid data');
-			    }
-		  	}.bind(this));
+					this.onNowUpdate({'spot_price':spot_price,'full_price':full_price});
+				} catch ( e ) {
+					console.log ('elspot request failed: Invalid data');
+				}
+			}.bind(this));
 		}.bind(this)).on('error', function(e) {
 			console.log('elspot request failed: ' + e.message);
 		});
-	    setTimeout(function() { this.fetchDatanow() }.bind(this), config.elspot.realtime_delay_ms);
+		setTimeout(function() { this.fetchDatanow() }.bind(this), config.elspot.realtime_delay_ms);
 
 	},
 	Start: function () {

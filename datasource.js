@@ -21,8 +21,8 @@ module.exports = {
 					console.info('Done.');
 				});
 			});
-	  	}
+		}
 
-	  	this.db = db;
+		this.db = db;
 	}
 }
