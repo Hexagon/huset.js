@@ -4,7 +4,7 @@ var fs = require('fs')
   , telldus = require('telldus-core-js')
   , path = require('path')
 
-  // Include huset.nu modules
+  // Include huset.js modules
   , server = require('./server.js')
   , datasource = require('./datasource.js')
   , sms = require('./sms.js')
@@ -199,13 +199,14 @@ if( config.tellstick.enable === 1 ) {
       var ts = Date.now() / 1000;
       
       // Execute statement
-
       try {
         datasource.db.prepare("INSERT INTO telldus_device_history (id,status,ts) VALUES(?,?,?)").run(device,l_status_num,ts).finalize();
       } catch (err) {
         console.log('DB insert failed: ', err);
       }
+
     }
+    
   });
 }
 
