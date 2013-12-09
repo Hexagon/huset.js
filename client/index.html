@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+	<head>
+
+		<meta charset="utf-8" />
+
+		<title>huset.nu</title>
+
+		<link href="home.png" rel="icon" type="image/x-icon" />
+
+		<!-- Mobile viewport fix -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- Vendor css -->
+		<link rel="stylesheet" href="css/vendor/bootstrap-switch.css" type="text/css" />
+
+		<!-- App css -->
+		<link rel="stylesheet" href="themes/default/base.css" type="text/css" />
+
+		<!-- Vendor js -->
+		<script type="text/javascript" src="js/vendor/jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="js/vendor/d3.min.js"></script>
+		<script type="text/javascript" src="js/vendor/bootstrap-switch.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+	    
+		<!-- App js -->
+		<script type="text/javascript" src="js/base.js"></script>
+		<script type="text/javascript" src="js/helper.chart.js"></script>
+
+		<!-- App plugins js -->
+		<script type="text/javascript" src="js/temperature.js"></script>
+		<!--<script type="text/javascript" src="js/electricity.js"></script>-->
+		<script type="text/javascript" src="js/control.js"></script>
+		<!--<script type="text/javascript" src="js/weather.js"></script>
+		<script type="text/javascript" src="js/calendar.js"></script>-->
+
+	    <script>
+
+	    	var iosocket,
+	    		devicegroups;
+
+			function processSensor (data) {
+				console.log('Incoming sensor: ', data);
+				$('#'+data.id+''+data.type).html(data.value);
+				$('#min_'+data.id+''+data.type).html(data.min);
+				$('#max_'+data.id+''+data.type).html(data.max);
+				console.log('#indicator_'+data.id+''+data.type);
+				if(data.value_diff==0) $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-stable.png')");
+				else if (data.value_diff<0) $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-down.png')");
+				else $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-up.png')");
+			}
+
+			function processDeviceGroups(data) {
+
+				// Cache devicegroups
+				devicegroups = data;
+				devicegroups.push({'id':'_1','name':'Övrigt'});
+
+				// Check for device group
+				for( idx in devicegroups ) {
+
+					var dg = devicegroups[idx];
+					var container_switch = $('<div class="box box-w-300 box-h-adaptive bg-dark" style="padding-right:5px;" id="devicegroup_'+dg.id+'"><h3>'+dg.name+'</h3></div>');
+					$('#devices').append(container_switch);
+
+				}
+			}
+
+			function createDevice(data) {
+
+				var id = data.id;
+				var state = data.status;
+				var name = data.name.replace('Vardagsrum ','');
+				var devicegroup = '_1';
+
+				// Search for specific devicegroup
+				for( idx in devicegroups )
+					for( idx_device in devicegroups[idx].devices )
+						if ( devicegroups[idx].devices[idx_device] == id )
+							devicegroup = devicegroups[idx].id;
+
+				var device_switch = $('<div class="make-switch switch-mini float-right"  data-on="success" data-off="default" id="device_'+id+'"><input type="checkbox" checked></div><h4>'+name+'</h4></div>');
+				$('#devicegroup_'+devicegroup).append(device_switch);
+				
+				console.log($('#devicegroup_'+devicegroup));
+
+				// Enable switch
+				$('#device_'+id).bootstrapSwitch();
+
+				if(state=='ON') {
+					$('#device_'+id).bootstrapSwitch('setState', true);
+				} else {
+					$('#device_'+id).bootstrapSwitch('setState', false);	
+				}
+
+				// Event handlers
+				$('#device_'+id).attr('data',id);
+				$('#device_'+id).on('switch-change', function (e, data) {
+					id = e.target.id.replace('device_','');
+					if(data.value == true) {
+						iosocket.emit('message',{'msg':'telldus_device_on','id':id});
+					} else {
+						iosocket.emit('message',{'msg':'telldus_device_off','id':id});
+					}
+				});
+			}
+			function processDevice(data) {
+
+				var id = data.id;
+				var state = data.status;
+				var name = data.name.replace('Vardagsrum ','');
+
+				// Create device if it doesn't exist
+				if( !document.getElementById('device_'+data.id)) {
+					createDevice(data);
+
+				// Update device if it exists
+				} else {
+					if(state=='ON') {
+						$('#device_'+id).bootstrapSwitch('setState', true);
+					} else {
+						$('#device_'+id).bootstrapSwitch('setState', false);	
+					}
+				}
+
+			}
+
+			function processEliqDatanow (data) {
+				console.log('Incoming eliq_datanow:', data);
+				var power = data.power;
+				var unit = "Wh";
+				if( data.power > 1500 ) {
+					power = Math.round(data.power/10)/100;
+					unit = "kWh";
+				}
+				$('#eliq_datanow').html('<h4>Förbrukning nu</h4><h2>'+power+' '+unit);
+			}
+
+			function processElspotNow (data) {
+				console.log('Incoming elspot_now:', data);
+				$('#spot_1').html('<h4>Elpris live</h4><h2>'+data.full_price+' öre/KWh')
+			}
+
+			function processEliqDataday (data) {
+
+				// Update daily total
+				console.log('Incoming eliq_dataday:', data);
+				var power = 0;
+				for( i in data.data) {
+					power+=data.data[i].energy;
+				}
+				var unit = "Wh";
+				if( power > 1500 ) {
+					power = Math.round(power/10)/100;
+					unit = "kWh";
+				}
+				$('#eliq_dataday').html('<h4>Förbrukning dygn</h4><h2>'+power+' '+unit);
+
+				// Update
+				gen_chart_json('eliq_chart_dataday',data.data,null,'Elförbrukning','time_start','energy');
+
+			}
+
+			$(function(){
+				iosocket = io.connect();
+				iosocket.on('connect', function () {
+					iosocket.on('message', function(message) {
+
+						´// On connect, a complete bunch of messages are sent in one message
+						if(message.msg=="initial_data") {
+
+							processDeviceGroups (message.data.devicegroups);
+							for( sensor in message.data.telldus_sensors ) {
+								processSensor(message.data.telldus_sensors[sensor]);
+							}
+							for( device in message.data.telldus_devices ) {
+								processDevice(message.data.telldus_devices[device]);
+							}
+							processEliqDatanow (message.data.eliq_datanow);
+							processEliqDataday (message.data.eliq_dataday);
+							processElspotNow (message.data.elspot_now);
+								
+						}
+
+						// Single message handlers
+						if(message.msg=="tellstick_sensor_update") processSensor( message.data );
+						if(message.msg=="tellstick_device_update") processDevice( message.data );
+						if(message.msg=="eliq_datanow") processEliqDatanow ( message.data ); 
+						if(message.msg=="eliq_dataday") processEliqDataday ( message.data ); 
+						if(message.msg=="elspot_now") processElspotNow ( message.data );
+
+					});
+				});
+			});
+
+	    </script>
+	</head>
+	<body>
+		<!-- Woop Woop -->
+	</body>
+</html>

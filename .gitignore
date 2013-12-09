@@ -1,0 +1,57 @@
+## huset.js
+
+triggers/*
+!triggers/example.device.js
+!triggers/example.sensor.js
+!triggers/example.time.js
+
+db/*
+!db/create.sql
+
+config.json
+
+client/themes/default/img/*
+client/themes/default/img/symbols/*
+client/themes/home.png
+
+##node.js
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+
+node_modules
+npm-debug.log
+
+build
+.lock-wscript
+
+## OSX
+.DS_Store
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+##textmate
+*.tmproj
+*.tmproject
+tmtags
+
+## sublimetext
+# SublimeText project files
+/*.sublime-project
+
+##VI
+*.swp

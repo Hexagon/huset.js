@@ -1,0 +1,231 @@
+/* Google font - Dosis */
+@import url(http://fonts.googleapis.com/css?family=Dosis:200,400,500,600);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300);
+
+/* Dokumentegenskaper */
+html {
+	background:-webkit-radial-gradient(circle, #222222 0%, #000000 100%);
+	background-image:url('img/bg_1280.jpg');
+	height:auto;
+	width:3000px;
+    font-family: 'Open Sans';
+    color: #FFFFFF;
+    padding-left: 30px;
+    padding-top:10px;
+    overflow-y: hidden; 
+}
+
+/* Textformatering */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    margin-top:5px;
+    margin-bottom:0px;
+    padding-bottom:0px;
+    color: #999999;
+    font-weight:300;
+}
+h2 {
+    color: #DDDDDD;
+    font-weight:300;
+}
+strong {
+	font-weight:500;
+}
+
+.container {
+	display:inline-block;
+	float:left;
+	height:570px;
+	margin: 0px;
+	margin-top:10px;
+	padding: 0px;
+	margin-right:50px;
+	overflow: hidden;
+}
+
+.container h2 {
+	margin-bottom:30px;
+}
+
+.container-100 { width: 120px; }
+.container-200 { width: 220px; }
+.container-300 { width: 320px; }
+.container-400 { width: 420px; }
+.container-500 { width: 520px; }
+.container-600 { width: 620px; }
+.container-700 { width: 720px; }
+
+.hidden { display: none; }
+
+.box {
+	float:left;
+	display:inline-block;
+	margin:0px;
+	margin-left:5px;
+	margin-bottom:5px;	
+	padding:0px;
+	background-color:#111111;
+	overflow:hidden;
+	background-opacity:.5;
+}
+
+.box-clean {
+	margin-bottom:0px;
+}
+
+.box-clean h3 { margin:3px;}
+
+
+.box h1,h2,h3,h4,h5 {
+	margin:10px;
+	font-weight:400px;
+}
+
+.box-w-100 {width:95px;}
+.box-w-200 {width:195px;}
+.box-w-300 {width:295px;}
+.box-w-400 {width:395px;}
+.box-w-500 {width:495px;}
+.box-w-600 {width:595px;}
+.box-w-700 {width:695px;}
+.box-h-100 {height:95px;}
+.box-h-200 {height:195px;}
+.box-h-300 {height:295px;}
+.box-h-400 {height:395px;}
+.box-h-500 {height:495px;}
+
+.box-w-80 {width:75px;}
+.box-w-120 {width:115px;}
+
+.right { text-align: right;}
+
+.content {
+	float:left;
+	display:inline-block;
+	margin:0px;
+	margin-left:0px;
+	margin-bottom:0px;	
+	padding:0px;
+	overflow:hidden;
+}
+
+.fg-green {
+	color:rgba(0,128,0,1.0);
+}
+.fg-dark {
+	color:rgba(96,96,96,1.0);
+}
+.fg-light {
+	color:rgba(196,196,196,1.0);
+}
+.fg-light-green {
+	color:rgba(128,255,128,1.0);
+}
+.fg-light-red {
+	color:rgba(255,128,128,1.0);
+}
+.fg-light-blue {
+	color:rgba(128,128,255,1.0);
+}
+
+.bg-green {
+	background-color:rgba(0,96,0,0.3);
+}
+.bg-dark {
+	background-color:rgba(0,0,0,0.8);
+}
+.bg-light {
+	background-color:rgba(96,96,96,0.6);
+}
+
+
+/* Moduler (tagg <article>), en modul kan ha klass horizontal eller vertical och innehåller en eller flera sektioner */
+
+/* Chart */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #333;
+  shape-rendering: crispEdges;
+}
+
+.y.axis path,
+.x.axis path {
+	stroke: #111;
+}
+
+.line0 {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.line1 {
+  fill: none;
+  stroke: #444444;
+  stroke-width: 1.5px;
+}
+
+.axis text {
+	font-size:10px;
+	fill:rgba(96,96,96,1.0);
+}
+
+/* Ikoner */
+.icon-temp-indicator {
+	width:32px;
+	height:32px;
+	float:left;
+	position:relative;
+	margin:7px;
+	background-size:32px 32px;
+}
+
+/* Responsivt */
+@media (max-width: 731px) and (min-width: 541px)  {
+
+	html {
+
+		width:731px;
+	    padding-left: 10px;
+    	overflow-y: scroll; 
+    	overflow-x: scroll; 
+
+	}
+	
+}
+
+/* Responsivt */
+@media (max-width: 541px) {
+
+	html {
+		width:431px;
+	    padding-left: 10px;
+    	overflow-y: scroll; 
+    	overflow-x: scroll; 
+	}
+
+	.box-w-100 {width:395px;}
+	.box-w-200 {width:395px;}
+	.box-w-300 {width:395px;}
+	.box-w-400 {width:395px;}
+	.box-w-500 {width:395px;}
+	.box-w-600 {width:395px;}
+	.box-w-700 {width:395px;}
+
+	.container-100 { width: 420px; }
+	.container-200 { width: 420px; }
+	.container-300 { width: 420px; }
+	.container-400 { width: 420px; }
+	.container-500 { width: 420px; }
+	.container-600 { width: 420px; }
+	.container-700 { width: 420px; }
+
+}
+
+.float-right { float:right; }
+.float-left { float:right; }
+
+.has-switch {
+	margin-top:5px;
+}
