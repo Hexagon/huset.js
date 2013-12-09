@@ -1,58 +1,58 @@
 {
-	"server": {
-		"port": 8080,
-		"live_stream": 1,
-		"mimetypes": {
-			"html": "text/html",
-			"jpeg": "image/jpeg",
-			"jpg": "image/jpeg",
-			"png": "image/png",
-			"js": "text/javascript",
-			"css": "text/css"
-		}
-	},
-	"triggers": {
-		"time_tick_ms": 10000
-	},
-	"eliq": {
-		"enable": 1,
-		"realtime_delay_ms": 20000,
-		"daily_delay_ms": 120000,
-		"accesstoken": ""
-	},
-	"elspot": {
-		"enable": 1,
-		"realtime_delay_ms": 120000,
-		"price_premium": 4,
-		"price_tax": 29.3,
-		"price_vat_percentage": 25
-	},
-	"sms": {
-		"number": "",
-		"user": "",
-		"pass": ""
-	},
-	"database": {
-		"file": "db/data.sqlite3",
-		"script": "db/create.sql"
-	},
-	"tellstick": {
-		"enable": 1,
-		"device_history": 1,
-		"sensor_history": 1,
-		"device_emit": 1,
-		"sensor_emit": 1,
-		"devicegroups": [
-			{
-				"id": 1,
-				"name": "Vardagsrum",
-				"devices": [1,2,5,6]
-			},
-			{
-				"id": 2,
-				"name": "Utebelysning",
-				"devices": [8,9]
-			}
-		]
-	}
+  "server": {
+    "port": 8080,
+    "live_stream": 1,
+    "mimetypes": {
+      "html": "text/html",
+      "jpeg": "image/jpeg",
+      "jpg": "image/jpeg",
+      "png": "image/png",
+      "js": "text/javascript",
+      "css": "text/css"
+    }
+  },
+  "triggers": {
+    "time_tick_ms": 10000
+  },
+  "eliq": {
+    "enable": 1,
+    "realtime_delay_ms": 20000,
+    "daily_delay_ms": 120000,
+    "accesstoken": ""
+  },
+  "elspot": {
+    "enable": 1,
+    "realtime_delay_ms": 120000,
+    "price_premium": 4,
+    "price_tax": 29.3,
+    "price_vat_percentage": 25
+  },
+  "sms": {
+    "number": "",
+    "user": "",
+    "pass": ""
+  },
+  "database": {
+    "file": "db/data.sqlite3",
+    "script": "db/create.sql"
+  },
+  "tellstick": {
+    "enable": 1,
+    "device_history": 1,
+    "sensor_history": 1,
+    "device_emit": 1,
+    "sensor_emit": 1,
+    "devicegroups": [
+      {
+        "id": 1,
+        "name": "Vardagsrum",
+        "devices": [1,2,5,6]
+      },
+      {
+        "id": 2,
+        "name": "Utebelysning",
+        "devices": [8,9]
+      }
+    ]
+  }
 }

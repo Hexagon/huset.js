@@ -1,5 +1,5 @@
 var config = require('./config.json')
-	, https = require('https');
+  , https = require('https');
 
 var eliq_realtime_url = "https://my.eliq.se/api/datanow?accesstoken="+config.eliq.accesstoken;
 
@@ -9,76 +9,76 @@ var eliq_realtime_url = "https://my.eliq.se/api/datanow?accesstoken="+config.eli
 
 if ( !Date.prototype.toLocalString ) {
   ( function() {
-	
-	function pad(number) {
-	  if ( number < 10 ) {
-		return '0' + number;
-	  }
-	  return number;
-	}
+  
+  function pad(number) {
+    if ( number < 10 ) {
+    return '0' + number;
+    }
+    return number;
+  }
  
-	Date.prototype.toLocalString = function() {
-	  return this.getFullYear() +
-		'-' + pad( this.getMonth() + 1 ) +
-		'-' + pad( this.getDate() ) +
-		'T' + pad( this.getHours() ) +
-		':' + pad( this.getMinutes() ) +
-		':' + pad( this.getSeconds() );
-	};
+  Date.prototype.toLocalString = function() {
+    return this.getFullYear() +
+    '-' + pad( this.getMonth() + 1 ) +
+    '-' + pad( this.getDate() ) +
+    'T' + pad( this.getHours() ) +
+    ':' + pad( this.getMinutes() ) +
+    ':' + pad( this.getSeconds() );
+  };
   
   }() );
 }
 
 module.exports = {
-	onDatanowUpdate: function(data) { console.log('onDatanowUpdate: No consumer attached',data)},
-	onDatadayUpdate: function(data) { console.log('onDatadayUpdate: No consumer attached',data)},
-	fetchDatanow: function() {
+  onDatanowUpdate: function(data) { console.log('onDatanowUpdate: No consumer attached',data)},
+  onDatadayUpdate: function(data) { console.log('onDatadayUpdate: No consumer attached',data)},
+  fetchDatanow: function() {
 
-		// Start real time (datanow) update
-		https.get(eliq_realtime_url, function(res) {
-			res.on("data", function(chunk) {
-				try {
-					this.onDatanowUpdate(JSON.parse(chunk));
-				} catch ( e ) {
-					console.log ('eliq request failed: Invalid data');
-				}
-			}.bind(this));
-		}.bind(this)).on('error', function(e) {
-			console.log('eliq request failed: ' + e.message);
-		});
+    // Start real time (datanow) update
+    https.get(eliq_realtime_url, function(res) {
+      res.on("data", function(chunk) {
+        try {
+          this.onDatanowUpdate(JSON.parse(chunk));
+        } catch ( e ) {
+          console.log ('eliq request failed: Invalid data');
+        }
+      }.bind(this));
+    }.bind(this)).on('error', function(e) {
+      console.log('eliq request failed: ' + e.message);
+    });
 
-		// Schedule next update
-		setTimeout(function() { this.fetchDatanow() }.bind(this), config.eliq.realtime_delay_ms);
+    // Schedule next update
+    setTimeout(function() { this.fetchDatanow() }.bind(this), config.eliq.realtime_delay_ms);
 
-	},
-	fetchDataday: function () {
+  },
+  fetchDataday: function () {
 
-		// Recalculate URL
-		var d = new Date();
-		dt_to = d.toLocalString();
-		console.log(d.toLocalString());
-		dt_from = new Date(d.getTime()-24*3600000-1000).toLocalString();
-		var eliq_dataday_url = "https://my.eliq.se/api/data?accesstoken="+config.eliq.accesstoken+"&startdate="+dt_from+"&enddate="+dt_to+"&intervaltype=hour";
-		
-		// Start daily history (dataday) update
-		https.get(eliq_dataday_url, function(res) {
-			res.on("data", function(chunk) {
-				try {
-					this.onDatadayUpdate(JSON.parse(chunk));
-				} catch ( e ) {
-					console.log ('eliq request failed: Invalid data');
-				}
-			}.bind(this));
-		}.bind(this)).on('error', function(e) {
-			console.log('eliq request failed: ' + e.message);
-		});
+    // Recalculate URL
+    var d = new Date();
+    dt_to = d.toLocalString();
+    console.log(d.toLocalString());
+    dt_from = new Date(d.getTime()-24*3600000-1000).toLocalString();
+    var eliq_dataday_url = "https://my.eliq.se/api/data?accesstoken="+config.eliq.accesstoken+"&startdate="+dt_from+"&enddate="+dt_to+"&intervaltype=hour";
+    
+    // Start daily history (dataday) update
+    https.get(eliq_dataday_url, function(res) {
+      res.on("data", function(chunk) {
+        try {
+          this.onDatadayUpdate(JSON.parse(chunk));
+        } catch ( e ) {
+          console.log ('eliq request failed: Invalid data');
+        }
+      }.bind(this));
+    }.bind(this)).on('error', function(e) {
+      console.log('eliq request failed: ' + e.message);
+    });
 
-		// Schedule next update
-		setTimeout(function() { this.fetchDataday() }.bind(this), config.eliq.daily_delay_ms);
+    // Schedule next update
+    setTimeout(function() { this.fetchDataday() }.bind(this), config.eliq.daily_delay_ms);
 
-	},
-	Start: function () {
-		this.fetchDatanow();
-		this.fetchDataday();
-	}
+  },
+  Start: function () {
+    this.fetchDatanow();
+    this.fetchDataday();
+  }
 }
