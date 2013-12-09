@@ -24,11 +24,11 @@ calendar.prototype.run = function() {
 
 	}
 
-	// Month and days
+	// Month and days ( Fixme: International )
 	var days = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
 	var months = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
 	
-	// Fetch calendar
+	// Fetch calendar ( Fixme: does not work )
 	$.getJSON('proxy/calendar', function(data) {
 		console.log(data);
 		for( var i = 0; i < data.feed.entry.length; i++ ) {

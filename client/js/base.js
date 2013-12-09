@@ -1,4 +1,4 @@
-/* base.js inkluderas först, eftersom den skapar arrayen huset.plugins som alla plugins lägger in sig själva i */
+// base.js is included first, then each plugin is automagically included 
 
 // Define huset...!
 function Huset() {};
@@ -12,7 +12,7 @@ Huset.prototype.run = function() {
 };
 var huset = new Huset();
 
-// Starta igång skiten när dokumentet är redo!
+// Start everything when the document is ready
 $(document).ready(function() {
 	huset.run();
 });

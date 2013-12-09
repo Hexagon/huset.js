@@ -32,5 +32,5 @@ weather.prototype.run = function() {
 
 };
 
-// Aktivera det här pluginnet
+// Activate this plugin
 huset.plugins.push(new weather());

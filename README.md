@@ -21,6 +21,7 @@ Features:
    	* Tellstick Duo (Sensors and Switches)
    	* Eliq Online API support
       * Live electricity spot price fron Nordpool
+      * Cellsynt API for sms alerts
    	* Google Calendar (not done)
    	* Yr.no weather data (not done)
 
