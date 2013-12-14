@@ -43,7 +43,6 @@ var triggers = {
     for( var i=0 ; i<this.all.length ; i++ ) if(this.all[i].notifySensorUpdate != undefined) this.all[i].notifySensorUpdate(id, type);
   },
   notifyTimeTick: function() {
-
     // Notify all triggers of time tick
     var d = new Date();
     for( var i=0 ; i<this.all.length ; i++ ) if(this.all[i].notifyTimeTick != undefined) this.all[i].notifyTimeTick(d);
@@ -54,7 +53,12 @@ var triggers = {
   notifyEliqDatanow: function() {
     // Notify all triggers of power consumption update
     for( var i=0 ; i<all.length ; i++ ) this.all[i].notifyTimeTick(cache);
+  },
+  notifyRawDeviceUpdate: function(data) {
+    // Notify all triggers of event
+    for( var i=0 ; i<this.all.length ; i++ ) if(this.all[i].notifyRawDeviceUpdate != undefined) this.all[i].notifyRawDeviceUpdate(data);
   }
+
 };
 
 module.exports = triggers;

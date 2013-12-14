@@ -36,7 +36,8 @@
   "sms": {
     "number": "",
     "user": "",
-    "pass": ""
+    "password": "",
+    "originator": "Huset.js"
   },
   "database": {
     "file": "db/data.sqlite3",

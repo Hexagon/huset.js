@@ -208,6 +208,13 @@ datasource.Init(function(){
       }
       
     });
+    console.log('\tStarting raw device event listener ...');
+    telldus.addRawDeviceEventListener(function (controllerId, data) {
+
+      // Notify triggers
+      triggers.notifyRawDeviceUpdate(data);
+      
+    });
   }
 
   if(config.eliq.enable === 1 ) {
