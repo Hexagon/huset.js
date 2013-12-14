@@ -2,6 +2,7 @@
 
 triggers/*
 !triggers/example.device.js
+!triggers/example.rawevent.js
 !triggers/example.sensor.js
 !triggers/example.time.js
 
