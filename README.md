@@ -19,6 +19,7 @@ Prerequisites:
 Features:
 
    * Realtime HTML5 interface with socket.io
+   * Basic HTTP authentication
    * Data logging for extended history
    * User defined scripts for conditional event triggers and scheduling
    * Modules for third party applications/APIs
