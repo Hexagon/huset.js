@@ -2,6 +2,10 @@ Huset.js - a node.js tellstick duo server with superpowers
 
 ===
 
+![huset.js HTML5/socket.io interface](/docs/huset-screenshot.png)
+
+===
+
 Prerequisites:
 
    * telldus-core
