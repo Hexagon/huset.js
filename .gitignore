@@ -10,10 +10,6 @@ db/*
 
 config.json
 
-client/themes/default/img/*
-client/themes/default/img/symbols/*
-client/themes/home.png
-
 ##node.js
 lib-cov
 *.seed

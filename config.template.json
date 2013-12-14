@@ -11,6 +11,9 @@
       "css": "text/css"
     }
   },
+  "debug": {
+    "enabled": 0
+  },
   "triggers": {
     "time_tick_ms": 10000
   },

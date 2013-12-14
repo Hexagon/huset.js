@@ -11,20 +11,24 @@ var triggers = {
       try {
         file = result[i];
 
-        // Read trigger
-        var fresh_trigger = require("./triggers/" + file);
+        // Do not include example triggers
+        if( file.substring(0,8) !== "example.") {
 
-        // Assign cache
-        fresh_trigger.cache = cache;
+          // Read trigger
+          var fresh_trigger = require("./triggers/" + file);
 
-        // Push to array
-          this.all.push(fresh_trigger);
+          // Assign cache
+          fresh_trigger.cache = cache;
 
-        console.log('\tTrigger loaded:',file);
+          // Push to array
+            this.all.push(fresh_trigger);
 
-        } catch (err) {
-          console.error('\tFailed to load plugin: ' + file, err);
+          console.log('\tTrigger loaded:',file);
+
         }
+      } catch (err) {
+        console.error('\tFailed to load plugin: ' + file, err);
+      }
     };
 
     // Start time tick notifier
@@ -44,7 +48,7 @@ var triggers = {
     var d = new Date();
     for( var i=0 ; i<this.all.length ; i++ ) if(this.all[i].notifyTimeTick != undefined) this.all[i].notifyTimeTick(d);
 
-    // Recurse to infinity
+    // Recurse to infinity ( or at least until the power goes out! )
     setTimeout(function() { this.notifyTimeTick() }.bind(this), config.triggers.time_tick_ms );
   },
   notifyEliqDatanow: function() {

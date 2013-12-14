@@ -60,9 +60,12 @@
         for( idx in devicegroups ) {
 
           var dg = devicegroups[idx];
-          var container_switch = $('<div class="box box-w-300 box-h-adaptive bg-dark" style="padding-right:5px;" id="devicegroup_'+dg.id+'"><h3>'+dg.name+'</h3></div>');
-          $('#devices').append(container_switch);
 
+          // Only create devicegroup if it does not already exist
+          if( $('#devicegroup_'+dg.id).length == 0 ) {
+            var container_switch = $('<div class="box box-w-300 box-h-adaptive bg-dark" style="padding-right:5px;" id="devicegroup_'+dg.id+'"><h3>'+dg.name+'</h3></div>');
+            $('#devices').append(container_switch);
+          }
         }
       }
 
@@ -166,7 +169,7 @@
         iosocket.on('connect', function () {
           iosocket.on('message', function(message) {
 
-            ´// On connect, a complete bunch of messages are sent in one message
+            // On connect, a complete bunch of messages are sent in one message
             if(message.msg=="initial_data") {
 
               processDeviceGroups (message.data.devicegroups);

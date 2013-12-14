@@ -7,9 +7,9 @@ Prerequisites:
    * telldus-core
    * node.js ( >= 0.10.22 recommended )
    	* npm
-   	* telldus-core-js ( >= 0.6, https://github.com/Hexagon/telldus-core-js )
-   	* socket.io ( >= 0.9.16, npm install socket.io )
-   	* sqlite3 ( >= npm install sqlite3)
+   	* telldus ( >= 0.0.3, ```npm install telldus``` )
+   	* socket.io ( >= 0.9.16, ```npm install socket.io``` )
+   	* sqlite3 ( >= ```npm install sqlite3```)
 
 
 Features:

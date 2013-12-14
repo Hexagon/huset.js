@@ -4,12 +4,13 @@ var sqlite3 = require("sqlite3"),
   path = require('path');
 
 module.exports = {
-  Init: function () {
+  Init: function (callback) {
 
     // Initiate sqlite3 database
     var db_file = path.join(__dirname, config.database.file);
     var exists = fs.existsSync(db_file);
     db = new sqlite3.Database(db_file);
+    this.db = db;
 
     // Create
     if (!exists) {
@@ -18,11 +19,13 @@ module.exports = {
         if (err) throw err;
         db.exec(data, function (err) {
           if (err) throw err;
-          console.info('Done.');
+          console.info('\tDone creating database.');
+          callback();
         });
       });
+    } else {
+      callback();
     }
 
-    this.db = db;
   }
 }

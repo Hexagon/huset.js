@@ -58,7 +58,7 @@ var server = http.createServer(function(req, res) {
   {
 
     // JSON proxy
-    if ( unescape(uri).left(12) == '/proxy/json/' ) {
+    if ( unescape(uri).substring(1,12) == '/proxy/json/' ) {
 
       // Proxyed URL requested
       console.log('Proxyed json requested',uri);

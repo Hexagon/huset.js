@@ -1,4 +1,4 @@
-var telldus = require('telldus-core-js')
+var telldus = require('telldus');
 
 var triggers = {
   

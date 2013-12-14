@@ -56,7 +56,6 @@ module.exports = {
     // Recalculate URL
     var d = new Date();
     dt_to = d.toLocalString();
-    console.log(d.toLocalString());
     dt_from = new Date(d.getTime()-24*3600000-1000).toLocalString();
     var eliq_dataday_url = "https://my.eliq.se/api/data?accesstoken="+config.eliq.accesstoken+"&startdate="+dt_from+"&enddate="+dt_to+"&intervaltype=hour";
     
