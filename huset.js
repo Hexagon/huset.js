@@ -80,7 +80,7 @@ datasource.Init(function(){
     );
 
     console.log('\tTellstick devices ...');
-    var devices = telldus.getDevices();
+    var devices = telldus.getDevicesSync();
     devices.forEach(function(item) { 
       cache.telldus_devices['d_'+item.id] = {
         id: item.id,

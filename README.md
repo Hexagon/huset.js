@@ -11,7 +11,7 @@ Prerequisites:
    * telldus-core
    * node.js ( >= 0.10.22 recommended )
    	* npm
-   	* telldus ( >= 0.0.3, ```npm install telldus``` )
+   	* telldus ( >= 0.0.4, ```npm install telldus``` )
    	* socket.io ( >= 0.9.16, ```npm install socket.io``` )
    	* sqlite3 ( >= ```npm install sqlite3```)
 
@@ -48,7 +48,5 @@ How to run:
 Final notes:
 
    * Huset is swedish for 'the house'
-   * 'Official' version of telldus-core-js does not compile with recent versions of node, use https://github.com/Hexagon/telldus-core-js until further notice.
    * This software is in an early stage of development, any kind of help is however appreciated!
-   * Images in the default theme of the client is not included due to unclear licenses.
    * Bootstrap-switch, d3 and jQuery is included and has their respective licenses embedded in the source code.
