@@ -73,7 +73,7 @@
 
         var id = data.id;
         var state = data.status;
-        var name = data.name.replace('Vardagsrum ','');
+        var name = data.name;
         var devicegroup = '_1';
 
         // Search for specific devicegroup
@@ -106,12 +106,13 @@
             iosocket.emit('message',{'msg':'telldus_device_off','id':id});
           }
         });
+
       }
       function processDevice(data) {
 
         var id = data.id;
         var state = data.status;
-        var name = data.name.replace('Vardagsrum ','');
+        var name = data.name;
 
         // Create device if it doesn't exist
         if( !document.getElementById('device_'+data.id)) {

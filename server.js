@@ -7,6 +7,14 @@ var config = require('./config.json')
 console.log('Starting HTTP server...')
 var server = http.createServer(function(req, res) {
 
+  // Error handling
+  req.on('error', function(err) {
+    console.log('Server request error: ' + err.errno);
+  });
+  res.on('error', function(err) {
+    console.log('Server response error: ' + err.errno);
+  });
+
   // Require authorization
   var auth = req.headers['authorization'];
   if(!auth && config.server.require_auth) { 

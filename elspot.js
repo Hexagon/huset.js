@@ -9,6 +9,7 @@ module.exports = {
   fetchDatanow: function() {
     // Start real time (datanow) update
     http.get(elspot_realtime_url, function(res) {
+
       res.on("data", function(chunk) {
         try {
           var data = JSON.parse(chunk),
@@ -19,9 +20,13 @@ module.exports = {
           console.log ('elspot request failed: Invalid data');
         }
       }.bind(this));
-    }.bind(this)).on('error', function(e) {
-      console.log('elspot request failed: ' + e.message);
-    });
+
+      res.on('error',function(err) {
+          console.log ('elspot request failed: ' + err.message);       
+      });
+
+    }.bind(this));
+
     setTimeout(function() { this.fetchDatanow() }.bind(this), config.elspot.realtime_delay_ms);
 
   },

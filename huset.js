@@ -85,7 +85,7 @@ datasource.Init(function(){
       cache.telldus_devices['d_'+item.id] = {
         id: item.id,
         name: item.name,
-        status: item.status.status
+        status: item.status.name
       };
     });
 
@@ -119,6 +119,16 @@ datasource.Init(function(){
 
        });
 
+      // Handle socket.io errors
+      socket.on('error', function (err) {
+        console.log('Socket.io connection error: ' + err.errno);
+      });
+
+    });
+
+    // Handle socket.io errors
+    io.on('error', function (err) {
+      console.log('Socket.io Error: ' + err.errno);
     });
 
   }
@@ -181,7 +191,7 @@ datasource.Init(function(){
       cache.telldus_devices['d_'+device] = {
         id: device,
         name: name,
-        status: status.status
+        status: status.name
       };
 
       // Notify triggers
@@ -265,4 +275,9 @@ datasource.Init(function(){
     };
     elspot.Start();
   }  
+});
+
+// Super sweet errorhandling.. Until someone figures out the ECONNRESET problem
+process.on('uncaughtException', function(err) {
+  console.log('Unhandled error occurred: ',err);
 });
