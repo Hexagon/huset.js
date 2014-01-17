@@ -60,6 +60,16 @@
         "name": "Utebelysning",
         "devices": [8,9]
       }
+    ],
+    "sensors": [
+      {
+         "name": "Inne",
+         "id": 11
+      },
+      {
+         "name": "Ute",
+         "id": 31
+      }
     ]
   }
 }

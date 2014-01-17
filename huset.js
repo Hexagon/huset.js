@@ -49,26 +49,36 @@ datasource.Init(function(){
       function(err,row) {
         if( !err ) {
 
-          // Prepare
-          var idx = 's_'+row.id+''+row.type
+          // Only track configured devicesb
+          for( sensor in config.tellstick.sensors) {
 
-          // Insert value_diff
-          row.value_diff = 0;
+            if( config.tellstick.sensors[sensor].id == row.id ) {
 
-          cache.telldus_sensors[idx] = row;
+              // Prepare
+              var idx = 's_'+row.id+''+row.type
 
-          // Get min/max
-          var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
-          var statement_inner = datasource.db.prepare("SELECT min(value) as val_min, max(value) as val_max FROM telldus_sensor_history WHERE id=? AND type=? AND ts>"+ts);
-          statement_inner.each(
-            [row.id,row.type],
-            function(err_inner,row_inner) {
-              if( !err ) {
-                cache.telldus_sensors[idx].min = row_inner.val_min;
-                cache.telldus_sensors[idx].max = row_inner.val_max;
-              }
+              // Inject value_diff and name 
+              row.value_diff = 0;
+              row.name = config.tellstick.sensors[sensor].name;
+
+              cache.telldus_sensors[idx] = row;
+
+              // Get min/max
+              var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
+              var statement_inner = datasource.db.prepare("SELECT min(value) as val_min, max(value) as val_max FROM telldus_sensor_history WHERE id=? AND type=? AND ts>"+ts);
+              statement_inner.each(
+                [row.id,row.type],
+                function(err_inner,row_inner) {
+                  if( !err ) {
+                    cache.telldus_sensors[idx].min = row_inner.val_min;
+                    cache.telldus_sensors[idx].max = row_inner.val_max;
+                  }
+                }
+              ); statement_inner.finalize();
             }
-          ); statement_inner.finalize();
+
+          }
+
         } else {
           console.log(err);
         }
@@ -141,43 +151,51 @@ datasource.Init(function(){
       // Filter out crap
       if( protocol == "temperaturehumidity" && ( model == "fineoffset" || model == "mandolyn") && Number(value) != NaN && Number(type) != NaN && Number(id) !=  NaN && Number(value) == value ) {
 
-        // Check if value has changed, to prevent excessive emits
-        var value_changed = ( cache.telldus_sensors['s_'+id+''+type] == undefined || value != cache.telldus_sensors['s_'+id+''+type].value ) ? true : false;
-        var value_diff = (cache.telldus_sensors['s_'+id+''+type] == undefined) ? 0 : value-cache.telldus_sensors['s_'+id+''+type].value;
-        var value_min = (cache.telldus_sensors['s_'+id+''+type] == undefined ) ? value : cache.telldus_sensors['s_'+id+''+type].min;
-        var value_max = (cache.telldus_sensors['s_'+id+''+type] == undefined ) ? value : cache.telldus_sensors['s_'+id+''+type].max;
-        value_min = ( value < value_min ) ? value : value_min;
-        value_max = ( value > value_max ) ? value : value_max;
-        
-        // Update cache
-        cache.telldus_sensors['s_'+id+''+type] = {
-          id: id,
-          type: type,
-          ts: ts,
-          message: model,
-          protocol: protocol,
-          value: value,
-          value_diff: value_diff,
-          min: value_min,
-          max: value_max
-        };
+        // Only track configured sensors
+        for( sensor in config.tellstick.sensors) {
 
-        // Notify triggers
-        if( value_changed )
-          triggers.notifySensorUpdate(id,type);
+          if( config.tellstick.sensors[sensor].id == id ) {
 
-        // Insert in database
-        if( config.tellstick.sensor_history === 1 && value_changed ) 
-          try {
-            datasource.db.prepare("INSERT INTO telldus_sensor_history (id,message,protocol,type,value,ts) VALUES(?,?,?,?,?,?)").run(id,model,protocol,type,value,ts).finalize();
-          } catch (err) {
-            console.error('DB insert failed: ', err);
+            // Check if value has changed, to prevent excessive emits
+            var value_changed = ( cache.telldus_sensors['s_'+id+''+type] == undefined || value != cache.telldus_sensors['s_'+id+''+type].value ) ? true : false;
+            var value_diff = (cache.telldus_sensors['s_'+id+''+type] == undefined) ? 0 : value-cache.telldus_sensors['s_'+id+''+type].value;
+            var value_min = (cache.telldus_sensors['s_'+id+''+type] == undefined ) ? value : cache.telldus_sensors['s_'+id+''+type].min;
+            var value_max = (cache.telldus_sensors['s_'+id+''+type] == undefined ) ? value : cache.telldus_sensors['s_'+id+''+type].max;
+            value_min = ( value < value_min ) ? value : value_min;
+            value_max = ( value > value_max ) ? value : value_max;
+            
+            // Update cache
+
+            cache.telldus_sensors['s_'+id+''+type] = {
+              id: id,
+              type: type,
+              name: config.tellstick.sensors[sensor].name,
+              ts: ts,
+              message: model,
+              protocol: protocol,
+              value: value,
+              value_diff: value_diff,
+              min: value_min,
+              max: value_max
+            };
+
+            // Notify triggers
+            if( value_changed )
+              triggers.notifySensorUpdate(id,type);
+
+            // Insert in database
+            if( config.tellstick.sensor_history === 1 && value_changed ) 
+              try {
+                datasource.db.prepare("INSERT INTO telldus_sensor_history (id,message,protocol,type,value,ts) VALUES(?,?,?,?,?,?)").run(id,model,protocol,type,value,ts).finalize();
+              } catch (err) {
+                console.error('DB insert failed: ', err);
+              }
+
+            // Broadcast sensor value to all clients
+            if( config.tellstick.sensor_emit === 1 && config.server.live_stream === 1 && value_changed ) 
+              io.sockets.emit('message', { msg: "tellstick_sensor_update", data: cache.telldus_sensors['s_'+id+''+type] });
           }
-
-        // Broadcast sensor value to all clients
-        if( config.tellstick.sensor_emit === 1 && config.server.live_stream === 1 && value_changed ) 
-          io.sockets.emit('message', { msg: "tellstick_sensor_update", data: cache.telldus_sensors['s_'+id+''+type] });
-
+        }
       } else {
         if ( config.debug.enabled ) console.info('Invalid sensor data received');
       }
