@@ -27,15 +27,17 @@ if ( !Date.prototype.toLocalString ) {
   }() );
 }
 
+https.globalAgent.options.secureProtocol = 'SSLv3_method';
+
 module.exports = {
   onDatanowUpdate: function(data) { console.log('onDatanowUpdate: No consumer attached',data)},
   onDatadayUpdate: function(data) { console.log('onDatadayUpdate: No consumer attached',data)},
   fetchDatanow: function() {
 
     // Start real time (datanow) update
-    req = https.get(eliq_realtime_url, function(res) {
+    var req = https.get(eliq_realtime_url, function(res) {
 
-      res.on("data", function(chunk) {
+      res.once("data", function(chunk) {
         try {
           this.onDatanowUpdate(JSON.parse(chunk));
         } catch ( e ) {
@@ -44,14 +46,14 @@ module.exports = {
       }.bind(this));
 
       res.on("error", function(e) {
-        console.log('eliq request failed: ' + e.message);
+        console.log('eliq request failed: ' + e.message + ', URL: ' + eliq_realtime_url);
       });
 
-    }.bind(this));
-
-    req.on('error', function(e) {
-      console.log('Eliq request failed: ' + e.message);
+    }.bind(this)).on('error', function(e) {
+      console.log('Eliq request failed: ' + e.message + ', URL: ' + eliq_realtime_url);
     });
+
+    req.end();
 
     // Schedule next update
     setTimeout(function() { this.fetchDatanow() }.bind(this), config.eliq.realtime_delay_ms);
@@ -66,9 +68,9 @@ module.exports = {
     var eliq_dataday_url = "https://my.eliq.se/api/data?accesstoken="+config.eliq.accesstoken+"&startdate="+dt_from+"&enddate="+dt_to+"&intervaltype=hour";
     
     // Start daily history (dataday) update
-    req = https.get(eliq_dataday_url, function(res) {
+    var req = https.get(eliq_dataday_url, function(res) {
 
-      res.on("data", function(chunk) {
+      res.once("data", function(chunk) {
         try {
           this.onDatadayUpdate(JSON.parse(chunk));
         } catch ( e ) {
@@ -77,15 +79,14 @@ module.exports = {
       }.bind(this));
 
       res.on('error', function(e) {
-        console.log('Eliq request failed: ' + e.message);
+        console.log('Eliq request failed: ' + e.message + ', URL: ' + eliq_dataday_url);
       });
 
-    }.bind(this));
-
-    req.on('error', function(e) {
-      console.log('Eliq request failed: ' + e.message);
+    }.bind(this)).on('error', function(e) {
+      console.log('Eliq request failed: ' + e.message + ', URL: ' + eliq_dataday_url);
     });
-     
+
+    req.end();
 
     // Schedule next update
     setTimeout(function() { this.fetchDataday() }.bind(this), config.eliq.daily_delay_ms);

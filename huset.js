@@ -296,6 +296,6 @@ datasource.Init(function(){
 });
 
 // Super sweet errorhandling.. Until someone figures out the ECONNRESET problem
-process.on('uncaughtException', function(err) {
+/*process.on('uncaughtException', function(err) {
   console.log('Unhandled error occurred: ',err);
-});
+});*/

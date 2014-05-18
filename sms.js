@@ -9,10 +9,13 @@ module.exports = {
     var pass = config.sms.password;
     var originator = config.sms.originator;
     var url = 'https://se-1.cellsynt.net/sms.php?username='+user+'&password='+pass+'&type=text&destination='+nr+'&originatortype=alpha&originator='+originator+'&text='+msg;
-    https.get(url, function(res) {
+    req = https.get(url, function(res) {
       res.on('error', function(e) {
-        console.log('Sms send failed: ' + e.message);
+        console.log('SMS Respnse failed: ' + e.message);
       });
+    }).on('error',function(err) {
+      console.log('SMS Request failed, error: ' + err.message);
     });
+    req.end();
   }
 };

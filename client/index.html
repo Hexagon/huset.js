@@ -148,38 +148,42 @@
 
       function processEliqDatanow (data) {
         console.log('Incoming eliq_datanow:', data);
-        var power = data.power;
-        var unit = "Wh";
-        if( data.power > 1500 ) {
-          power = Math.round(data.power/10)/100;
-          unit = "kWh";
+	if(data != null) {
+          var power = data.power;
+          var unit = "Wh";
+          if( data.power > 1500 ) {
+            power = Math.round(data.power/10)/100;
+            unit = "kWh";
+          }
+          $('#eliq_datanow').html('<h4>Förbrukning nu</h4><h2>'+power+' '+unit);
         }
-        $('#eliq_datanow').html('<h4>Förbrukning nu</h4><h2>'+power+' '+unit);
       }
 
       function processElspotNow (data) {
-        console.log('Incoming elspot_now:', data);
-        $('#spot_1').html('<h4>Elpris live</h4><h2>'+data.full_price+' öre/KWh')
+        if(data != null) {
+          console.log('Incoming elspot_now:', data);
+          $('#spot_1').html('<h4>Elpris live</h4><h2>'+data.full_price+' öre/KWh')
+        }
       }
 
       function processEliqDataday (data) {
+        if( data != null ) {
+          // Update daily total
+          console.log('Incoming eliq_dataday:', data);
+          var power = 0;
+          for( i in data.data) {
+            power+=data.data[i].energy;
+          }
+          var unit = "Wh";
+          if( power > 1500 ) {
+            power = Math.round(power/10)/100;
+            unit = "kWh";
+          }
+          $('#eliq_dataday').html('<h4>Förbrukning dygn</h4><h2>'+power+' '+unit);
 
-        // Update daily total
-        console.log('Incoming eliq_dataday:', data);
-        var power = 0;
-        for( i in data.data) {
-          power+=data.data[i].energy;
+          // Update
+          gen_chart_json('eliq_chart_dataday',data.data,null,'Elförbrukning','time_start','energy');
         }
-        var unit = "Wh";
-        if( power > 1500 ) {
-          power = Math.round(power/10)/100;
-          unit = "kWh";
-        }
-        $('#eliq_dataday').html('<h4>Förbrukning dygn</h4><h2>'+power+' '+unit);
-
-        // Update
-        gen_chart_json('eliq_chart_dataday',data.data,null,'Elförbrukning','time_start','energy');
-
       }
 
       $(function(){

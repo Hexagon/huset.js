@@ -8,9 +8,9 @@ module.exports = {
   onNowUpdate: function(data) { console.log('onDatanowUpdate: No consumer attached',data)},
   fetchDatanow: function() {
     // Start real time (datanow) update
-    http.get(elspot_realtime_url, function(res) {
+    req = http.get(elspot_realtime_url, function(res) {
 
-      res.on("data", function(chunk) {
+      res.once("data", function(chunk) {
         try {
           var data = JSON.parse(chunk),
             spot_price = Math.round(data.data[0].value/10)/100,
@@ -22,10 +22,14 @@ module.exports = {
       }.bind(this));
 
       res.on('error',function(err) {
-          console.log ('elspot request failed: ' + err.message);       
+          console.log ('elspot response failed: ' + err.message);       
       });
 
-    }.bind(this));
+    }.bind(this)).on('error',function(err) {
+       console.log('elspot request failed: ' + err.message);
+    });
+
+    req.end();
 
     setTimeout(function() { this.fetchDatanow() }.bind(this), config.elspot.realtime_delay_ms);
 
