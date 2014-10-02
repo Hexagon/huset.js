@@ -60,11 +60,18 @@
         $('#'+data.id+''+data.type).html(data.value);
         $('#min_'+data.id+''+data.type).html(data.min);
         $('#max_'+data.id+''+data.type).html(data.max);
-        console.log('#indicator_'+data.id+''+data.type);
+        //console.log('#indicator_'+data.id+''+data.type);
         if(data.value_diff==0) $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-stable.png')");
         else if (data.value_diff<0) $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-down.png')");
         else $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-up.png')");
 
+	// Check for stale reading
+	if( (new Date() - new Date(data.ts*1000))>180000 ) {
+		$('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-stale.png')");
+		$('#indicator_'+data.id+''+data.type).attr('alt', 'Last reading: ' + new Date(data.ts));
+	} else {
+		$('#indicator_'+data.id+''+data.type).attr('alt', 'OK');
+	}
       }
 
       function processDeviceGroups(data) {

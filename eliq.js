@@ -1,8 +1,6 @@
 var config = require('./config.json')
   , https = require('https');
 
-var eliq_realtime_url = "https://my.eliq.se/api/datanow?accesstoken="+config.eliq.accesstoken;
-
 /* Extend the Date object with a slightly modified toISOString shim 
    from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString */
 if ( !Date.prototype.toLocalString ) {
@@ -35,7 +33,8 @@ module.exports = {
   fetchDatanow: function() {
 
     // Start real time (datanow) update
-    var req = https.get(eliq_realtime_url, function(res) {
+    var options_datanow = { host: "my.eliq.se", path: "/api/datanow?accesstoken="+config.eliq.accesstoken, rejectUnauthorized: false };
+    var req = https.get(options_datanow, function(res) {
 
       res.once("data", function(chunk) {
         try {
@@ -46,11 +45,11 @@ module.exports = {
       }.bind(this));
 
       res.on("error", function(e) {
-        console.log('eliq request failed: ' + e.message + ', URL: ' + eliq_realtime_url);
+        console.log('eliq request failed: ' + e.message);
       });
 
     }.bind(this)).on('error', function(e) {
-      console.log('Eliq request failed: ' + e.message + ', URL: ' + eliq_realtime_url);
+      console.log('Eliq request failed: ' + e.message);
     });
 
     req.end();
@@ -65,10 +64,10 @@ module.exports = {
     var d = new Date();
     dt_to = d.toLocalString();
     dt_from = new Date(d.getTime()-24*3600000-1000).toLocalString();
-    var eliq_dataday_url = "https://my.eliq.se/api/data?accesstoken="+config.eliq.accesstoken+"&startdate="+dt_from+"&enddate="+dt_to+"&intervaltype=hour";
-    
+    var options_dataday = { host: "my.eliq.se", path: "/api/data?accesstoken="+config.eliq.accesstoken+"&startdate="+dt_from+"&enddate="+dt_to+"&intervaltype=hour", rejectUnauthorized: false };
+
     // Start daily history (dataday) update
-    var req = https.get(eliq_dataday_url, function(res) {
+    var req = https.get(options_dataday, function(res) {
 
       res.once("data", function(chunk) {
         try {
@@ -79,11 +78,11 @@ module.exports = {
       }.bind(this));
 
       res.on('error', function(e) {
-        console.log('Eliq request failed: ' + e.message + ', URL: ' + eliq_dataday_url);
+        console.log('Eliq request failed: ' + e.message);
       });
 
     }.bind(this)).on('error', function(e) {
-      console.log('Eliq request failed: ' + e.message + ', URL: ' + eliq_dataday_url);
+      console.log('Eliq request failed: ' + e.message);
     });
 
     req.end();
