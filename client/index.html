@@ -37,7 +37,8 @@
     <script>
 
       var iosocket,
-        devicegroups;
+          devicegroups,
+          hGraphos=[];
 
       function createSensor(data) {
 
@@ -47,6 +48,11 @@
 
         $('#sensor_container').prepend('<div class="box box-w-200 box-h-100 bg-dark" id="sensor_'+id+'"><div class="content box-w-120 box-h-100"><div id="indicator_' + data.id + '1" class="icon-temp-indicator">&nbsp;</div><h4>'+name+'</h4><h1 class="fg-light"><span id="' + data.id + '1"></span>&deg;C</h1></div><div class="content box-w-80 box-h-100 right"><h5 class="fg-light-red"><span id="max_' + data.id + '1"></span>&deg;C</h5><h5 class="fg-light-blue"><span id="min_' + data.id + '1"></span>&deg;C</h5><h5 class="fg-light"><span id="' + data.id + '2"></span>%RH</h5></div></div></div>');
 
+
+        $('#sensor_container').append('<div class="box box-w-300 box-h-100 bg-dark" id="sensor_graph_'+id+'">');
+          
+          hGraphos['sensor'+id] = new Grapho( { place: 'sensor_graph_'+id } );
+
       }
 
       function processSensor (data) {
@@ -54,7 +60,6 @@
         // Create sensor if it don't exist
         if( !document.getElementById('sensor_'+data.id))
           createSensor(data);
-
 
         console.log('Incoming sensor: ', data);
         $('#'+data.id+''+data.type).html(data.value);
@@ -65,13 +70,23 @@
         else if (data.value_diff<0) $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-down.png')");
         else $('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-up.png')");
 
-	// Check for stale reading
-	if( (new Date() - new Date(data.ts*1000))>180000 ) {
-		$('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-stale.png')");
-		$('#indicator_'+data.id+''+data.type).attr('alt', 'Last reading: ' + new Date(data.ts));
-	} else {
-		$('#indicator_'+data.id+''+data.type).attr('alt', 'OK');
-	}
+      	// Check for stale reading
+      	if( (new Date() - new Date(data.ts*1000))>180000 ) {
+      		$('#indicator_'+data.id+''+data.type).css('background-image',"URL('themes/default/img/temp-stale.png')");
+      		$('#indicator_'+data.id+''+data.type).attr('alt', 'Last reading: ' + new Date(data.ts));
+      	} else {
+      		$('#indicator_'+data.id+''+data.type).attr('alt', 'OK');
+      	}
+
+      }
+
+      function processSensorHistory (data) {
+        // Update chart
+        if (data.sensor.type == 1) {
+          gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temp ' + data.sensor.name,'#FFFF66','ts','value',1);
+        } else {
+          gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Fuktighet ' + data.sensor.name,'#666666','ts','value',2);
+        }
       }
 
       function processDeviceGroups(data) {
@@ -155,7 +170,7 @@
 
       function processEliqDatanow (data) {
         console.log('Incoming eliq_datanow:', data);
-	if(data != null) {
+        if(data != null) {
           var power = data.power;
           var unit = "Wh";
           if( data.power > 1500 ) {
@@ -188,8 +203,13 @@
           }
           $('#eliq_dataday').html('<h4>Förbrukning dygn</h4><h2>'+power+' '+unit);
 
+          if (hGraphos['eliq_dataday'] == undefined) {
+            hGraphos['eliq_dataday'] = new Grapho( { place: 'eliq_chart_dataday' } );
+          }
+
           // Update
-          gen_chart_json('eliq_chart_dataday',data.data,'Elförbrukning','time_start','energy',1);
+          gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#FFFF66','time_start','energy',1);
+
         }
       }
 
@@ -217,6 +237,7 @@
             // Single message handlers
             if(message.msg=="tellstick_sensor_update") processSensor( message.data );
             if(message.msg=="tellstick_device_update") processDevice( message.data );
+            if(message.msg=="tellstick_sensor_history") processSensorHistory( message.data );
             if(message.msg=="eliq_datanow") processEliqDatanow ( message.data ); 
             if(message.msg=="eliq_dataday") processEliqDataday ( message.data ); 
             if(message.msg=="elspot_now") processElspotNow ( message.data );
