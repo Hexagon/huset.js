@@ -1,3 +1,5 @@
+var grapho;
+
 function temperature() {};
 temperature.prototype.name = "Temperature";
 temperature.prototype.run = function() {
@@ -14,7 +16,7 @@ temperature.prototype.run = function() {
 
   // Prepare a grapho
 
-  var graphoDataDay = new Grapho( { place: 'eliq_chart_dataday' } );
+  grapho = new Grapho( { place: 'eliq_chart_dataday' } );
 
 
 };
