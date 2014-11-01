@@ -35,7 +35,7 @@ strong {
 .container {
 	display:inline-block;
 	float:left;
-	height:570px;
+	height:auto;
 	margin: 0px;
 	margin-top:10px;
 	padding: 0px;
