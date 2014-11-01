@@ -43,19 +43,11 @@ SOFTWARE.
 		// Label formatters, used through Grapho.formats.x
 		formats = {
 			default: function (l) {
-				// Check if we got a number, else just return
-				var i;
 				if (helpers.math.isNumber(l)) {
-					// Protext against very-very-close to ints
-					if (Math.round(l,19) === (i = parseInt(l))) {
-						return i;
-					} else {
-						return l;
-					}
+					return Math.round(l*100000)/100000;
 				} else {
-					return l;	
+					return l;
 				}
-				
 			},
 
 			datetime: function (l) {
