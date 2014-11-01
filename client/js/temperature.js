@@ -11,7 +11,12 @@ temperature.prototype.run = function() {
 
   // .. and put them in the document
   $("body").append(container_temp);
-  
+
+  // Prepare a grapho
+
+  var graphoDataDay = new Grapho( { place: 'eliq_chart_dataday' } );
+
+
 };
 
 // Activate this plugin

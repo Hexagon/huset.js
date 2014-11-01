@@ -19,7 +19,7 @@
 
     <!-- Vendor js -->
     <script type="text/javascript" src="js/vendor/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="js/vendor/d3.min.js"></script>
+    <script type="text/javascript" src="js/vendor/grapho.js"></script>
     <script type="text/javascript" src="js/vendor/bootstrap-switch.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
@@ -189,7 +189,7 @@
           $('#eliq_dataday').html('<h4>Förbrukning dygn</h4><h2>'+power+' '+unit);
 
           // Update
-          gen_chart_json('eliq_chart_dataday',data.data,null,'Elförbrukning','time_start','energy');
+          gen_chart_json('eliq_chart_dataday',data.data,'Elförbrukning (KW)',1);
         }
       }
 
