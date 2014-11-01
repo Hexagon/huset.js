@@ -192,8 +192,22 @@ datasource.Init(function(){
               }
 
             // Broadcast sensor value to all clients
-            if( config.tellstick.sensor_emit === 1 && config.server.live_stream === 1 && value_changed ) 
-              io.sockets.emit('message', { msg: "tellstick_sensor_update", data: cache.telldus_sensors['s_'+id+''+type] });
+            if( config.tellstick.sensor_emit === 1 && config.server.live_stream === 1 ) {
+               io.sockets.emit('message', { msg: "tellstick_sensor_update", data: cache.telldus_sensors['s_'+id+''+type]});
+		var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
+	         var sql = "SELECT \
+			      ts, \
+		              value \
+				FROM \
+		              telldus_sensor_history \
+			    WHERE id='"+id+"' AND type='"+type+"'AND ts > '"+ts+"'";
+		datasource.db.all(
+		   sql,
+		   function (err,data) {
+			io.sockets.emit('message', { msg: "tellstick_sensor_history", data: { sensor: cache.telldus_sensors['s_'+id+''+type], data: data }});
+		   }
+		);
+	    }
           }
         }
       } else {
