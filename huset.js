@@ -15,6 +15,25 @@ var fs = require('fs')
   // Include configuration
   , config = require('./config.json');
 
+function update_sensor_history(io, sensor) {
+  var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
+  var sql = "SELECT \
+              (round(ts / 900 -0.5)) * 900 as ts, \
+              avg(value) as value \
+            FROM \
+              telldus_sensor_history \
+            WHERE \
+              id='"+sensor.id+"' AND type='"+sensor.type+"'AND ts > '"+ts+"' \
+            GROUP BY \
+              (round(ts / 900 -0.5)) * 900";
+  datasource.db.all(
+    sql,
+    function (err,data) {
+      io.sockets.emit('message', { msg: "tellstick_sensor_history", data: { sensor: sensor, data: data }});
+    }
+  );
+}
+
 console.log('Initiating datasource ...');
 datasource.Init(function(){
 
@@ -49,7 +68,7 @@ datasource.Init(function(){
       function(err,row) {
         if( !err ) {
 
-          // Only track configured devicesb
+          // Only track configured devices
           for( sensor in config.tellstick.sensors) {
 
             if( config.tellstick.sensors[sensor].id == row.id ) {
@@ -116,6 +135,13 @@ datasource.Init(function(){
       // Send initial values
       if ( config.debug.enabled ) console.log('Transmitting initial cache ...');
       io.sockets.emit('message', { msg: 'initial_data' , data: cache });
+
+      // Send intial graphs
+      for( sensor in cache.telldus_sensors) {
+        var sens = cache.telldus_sensors[sensor];
+        update_sensor_history(io,sens);
+        update_sensor_history(io,sens);
+      }
 
       // On incoming message callback (has currently no use)
        socket.on('message', function (data) {
@@ -193,21 +219,9 @@ datasource.Init(function(){
 
             // Broadcast sensor value to all clients
             if( config.tellstick.sensor_emit === 1 && config.server.live_stream === 1 ) {
-               io.sockets.emit('message', { msg: "tellstick_sensor_update", data: cache.telldus_sensors['s_'+id+''+type]});
-		var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
-	         var sql = "SELECT \
-			      ts, \
-		              value \
-				FROM \
-		              telldus_sensor_history \
-			    WHERE id='"+id+"' AND type='"+type+"'AND ts > '"+ts+"'";
-		datasource.db.all(
-		   sql,
-		   function (err,data) {
-			io.sockets.emit('message', { msg: "tellstick_sensor_history", data: { sensor: cache.telldus_sensors['s_'+id+''+type], data: data }});
-		   }
-		);
-	    }
+              io.sockets.emit('message', { msg: "tellstick_sensor_update", data: cache.telldus_sensors['s_'+id+''+type]});
+	            update_sensor_history(io,cache.telldus_sensors['s_'+id+''+type]);
+      	    }
           }
         }
       } else {

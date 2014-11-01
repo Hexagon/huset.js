@@ -4,8 +4,6 @@ var currentGraph=[];
 function gen_chart_json(curGrapho,dest,d1,title,color,prop1,prop2,series,axis) {
 	var data = [],i;
 
-	if ( currentGraph == undefined ) currentGraph = [];
-
 	if (prop1 !== undefined) {
 		for(i = 0; i<d1.length; i++) {
 			var di=Date.parse(d1[i][prop1]);
@@ -19,11 +17,13 @@ function gen_chart_json(curGrapho,dest,d1,title,color,prop1,prop2,series,axis) {
 		data = d1;
 	}
 
+	// Remove previous data set
 	if (currentGraph !== undefined && currentGraph[dest]) {
 		curGrapho.removeDataset(currentGraph[dest]);
 		currentGraph[dest] = undefined;
 	}
 
+	// Add new data set
 	currentGraph[dest] = curGrapho.addDataSet({
 			type:'line',
 			strokeStyle: color,
