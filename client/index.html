@@ -91,12 +91,12 @@
 
         // Add outside temperature to eliq graph
         if (data.sensor.type === 1 && data.sensor.id === 31) {
-          gen_chart_json(hGraphos['eliq_dataday'],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur utomhus','rgba(128,196,255,0.5)','ts','value',data.sensor.name,2);
+          gen_chart_json(hGraphos['eliq_dataday'],'sensor_combo_'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur utomhus','rgba(128,196,255,0.5)','ts','value',data.sensor.name,2);
         }
 
         // Add outside temperature to eliq graph
         if (data.sensor.type === 1 && data.sensor.id === 138) {
-          gen_chart_json(hGraphos['eliq_dataday'],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur inomhus','rgba(255,196,128,0.5)','ts','value',data.sensor.name,4);
+          gen_chart_json(hGraphos['eliq_dataday'],'sensor_combo_'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur inomhus','rgba(196,255,128,0.5)','ts','value',data.sensor.name,4);
         }
 
       }

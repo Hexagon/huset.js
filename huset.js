@@ -16,7 +16,7 @@ var fs = require('fs')
   , config = require('./config.json');
 
 function update_sensor_history(io, sensor) {
-  var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
+  var ts = Math.round((new Date()).getTime() / 1000)-3600*22;
   var sql = "SELECT \
               (round(ts / 900 -0.5)) * 900 as ts, \
               avg(value) as value \
