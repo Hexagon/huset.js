@@ -4,6 +4,10 @@ function timeFormat (l) {
 	return Grapho.helpers.math.isNumber(l) ? new Date(l*1000).toLocaleTimeString().substring(0,5) : l;
 }
 
+function labelFormat (l) {
+	return Grapho.helpers.math.isNumber(l) ? l.toFixed(1) : l;
+}
+
 // Function to generate charts
 function gen_chart_json(curGrapho,dest,d1,title,color,prop1,prop2,series,axis) {
 	var data = [],i;
@@ -53,6 +57,7 @@ function gen_chart_json(curGrapho,dest,d1,title,color,prop1,prop2,series,axis) {
 				gridStyle: '#121212',
 				labelStyle: '#555555',
 				labelFont: '10px Droid Sans',
+				labelFormat: (dest === 'eliq_chart_dataday') ? Grapho.formats.default : labelFormat,
 				showGridLines: (axis===1) ? true : false,
 				extra: 2,
 				name: title,

@@ -81,13 +81,24 @@
       }
 
       function processSensorHistory (data) {
-        console.log('Sensor history: ', data);
+
         // Update chart
         if (data.sensor.type == 1) {
           gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur' + data.sensor.name,'#6699F0','ts','value',data.sensor.name,1);
         } else {
           gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Relativ luftfuktighet' + data.sensor.name,'#343536','ts','value',data.sensor.name,2);
         }
+
+        // Add outside temperature to eliq graph
+        if (data.sensor.type === 1 && data.sensor.id === 31) {
+          gen_chart_json(hGraphos['eliq_dataday'],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur utomhus','rgba(128,196,255,0.5)','ts','value',data.sensor.name,2);
+        }
+
+        // Add outside temperature to eliq graph
+        if (data.sensor.type === 1 && data.sensor.id === 138) {
+          gen_chart_json(hGraphos['eliq_dataday'],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur inomhus','rgba(255,196,128,0.5)','ts','value',data.sensor.name,4);
+        }
+
       }
 
       function processDeviceGroups(data) {
@@ -209,7 +220,7 @@
           }
 
           // Update
-          gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#6699F0','time_start','energy','Total',1);
+          gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#6699F0','time_end','energy','Total',1);
 
         }
       }
