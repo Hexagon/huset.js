@@ -42,13 +42,14 @@ SOFTWARE.
 
 		// Label formatters, used through Grapho.formats.x
 		formats = {
-			default: function (l) {
-				if (helpers.math.isNumber(l)) {
-					return Math.round(l*10000)/10000;
-				} else {
-					return l;
-				}
-			},
+            default: function (l) {
+            		// Protect agains javascript decimal place wierdness
+                    if (helpers.math.isNumber(l)) {
+                            return Math.round(l*10000)/10000;
+                    } else {
+                            return l;
+                    }
+            },
 
 			datetime: function (l) {
 				return helpers.math.isNumber(l) ? new Date(l*1000).toLocaleString() : l;
@@ -123,6 +124,7 @@ SOFTWARE.
 				padded: false,
 				stacked: false,
 				numeric: true,				// Handle this as an numerical (continouos) axis, or a text-axis
+				extra: 0,					// Extra adds to max and min, usable when using max/min auto
 				
 				// Used internaly
 				_nameTextSize: 0,				// Parsed height of font in pixels
@@ -522,8 +524,9 @@ SOFTWARE.
 					function fillSegment(grapho, context, startAngle, endAngle, outerRadiusPerc, innerRadiusPerc, fill) {
 					    var centerX = (grapho.wsw/2) + grapho.wox,
 					    	centerY = (grapho.wsh/2) + grapho.woy,
-					    	radiusOuter = ((grapho.wsw > grapho.wsh) ? grapho.wsh/2: grapho.wsw/2) * outerRadiusPerc,
-					    	radiusInner = ((grapho.wsw > grapho.wsh) ? grapho.wsh/2: grapho.wsw/2) * innerRadiusPerc + grapho.settings.innerMargin,
+					    	radius = ((grapho.wsw > grapho.wsh) ? grapho.wsh: grapho.wsw)/2,
+					    	radiusOuter = radius * outerRadiusPerc,
+					    	radiusInner = radius * innerRadiusPerc + grapho.settings.innerMargin,
 					    	startingAngle = (startAngle+grapho.settings.startAngle)*helpers.math.degToRad,
 					    	arcSize = (endAngle+0.5)*helpers.math.degToRad,
 					    	endingAngle = startingAngle + arcSize;
@@ -538,7 +541,7 @@ SOFTWARE.
 
 					}
 					// Fill segments
-					for ( i=0; i < dataset.data.length; i++) {
+					for (i=0; i < dataset.data.length; i++) {
 						step = outerBound-(i/(dataset.data.length))*(outerBound-innerBound);
 						context.fillStyle = dataset.fillStyle;
 						fillSegment(
@@ -652,6 +655,7 @@ SOFTWARE.
 	prot = Grapho.prototype;
 	
 	Grapho.formats = prot.formats = formats;
+	Grapho.helpers = prot.helpers = helpers;
 
 	// Place the grapho
 	prot.place = function (newDestination) { 
@@ -676,7 +680,7 @@ SOFTWARE.
 		dsIndex = this.datasets.indexOf(dataset);
 
 		if (dsIndex !== -1) {
-			this.datasets.splice(dsIndex);
+			this.datasets.splice(dsIndex,1);
 		}
 
 	};
@@ -799,16 +803,16 @@ SOFTWARE.
 
 		// Update axis min/max of axis, last dataset of axis has the control
 		if (yAxis.stacked) {
-			yAxis._maxVal = yAxis.max !== 'auto' ? yAxis.max : Math.max(Math.max.apply(null, yAxis._usedPos), yAxis._maxVal);
-			yAxis._minVal = yAxis.min !== 'auto' ? yAxis.min : Math.min(Math.min.apply(null, yAxis._usedNeg), yAxis._minVal);
+			yAxis._maxVal = yAxis.max !== 'auto' ? yAxis.max : Math.max(Math.max.apply(null, yAxis._usedPos) + yAxis.extra, yAxis._maxVal);
+			yAxis._minVal = yAxis.min !== 'auto' ? yAxis.min : Math.min(Math.min.apply(null, yAxis._usedNeg) - yAxis.extra, yAxis._minVal);
 		} else {
-			yAxis._maxVal = yAxis.max !== 'auto' ? yAxis.max : Math.max(Math.max.apply(null, cleanDataY), yAxis._maxVal);
-			yAxis._minVal = yAxis.min !== 'auto' ? yAxis.min : Math.min(Math.min.apply(null, cleanDataY), yAxis._minVal);
+			yAxis._maxVal = yAxis.max !== 'auto' ? yAxis.max : Math.max(Math.max.apply(null, cleanDataY) + yAxis.extra, yAxis._maxVal);
+			yAxis._minVal = yAxis.min !== 'auto' ? yAxis.min : Math.min(Math.min.apply(null, cleanDataY) - yAxis.extra, yAxis._minVal);
 		}
-		xAxis._maxVal = xAxis.max !== 'auto' ? xAxis.max : Math.max(Math.max.apply(null, cleanDataX), xAxis._maxVal);
-		xAxis._minVal = xAxis.min !== 'auto' ? xAxis.min : Math.min(Math.min.apply(null, cleanDataX), xAxis._minVal);
+		xAxis._maxVal = xAxis.max !== 'auto' ? xAxis.max : Math.max(Math.max.apply(null, cleanDataX) + xAxis.extra, xAxis._maxVal);
+		xAxis._minVal = xAxis.min !== 'auto' ? xAxis.min : Math.min(Math.min.apply(null, cleanDataX) - xAxis.extra, xAxis._minVal);
 
-		// Mege unique values of this and previous datasets
+		// Merge unique values of this and previous datasets
 		xAxis._values = helpers.array.unique(xAxis._values.concat(cleanDataX));
 		yAxis._values = helpers.array.unique(yAxis._values.concat(cleanDataY));
 

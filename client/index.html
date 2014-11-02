@@ -51,7 +51,7 @@
 
         $('#sensor_container').append('<div class="box box-w-600 box-h-200 bg-dark"><div id="sensor_graph_'+id+'" style="height:200px">');
           
-        hGraphos['sensor'+id] = new Grapho( { place: 'sensor_graph_'+id } );
+        hGraphos['sensor'+id] = new Grapho( { place: 'sensor_graph_'+id, margin: 10 } );
 
       }
 
@@ -84,9 +84,9 @@
         console.log('Sensor history: ', data);
         // Update chart
         if (data.sensor.type == 1) {
-          gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur' + data.sensor.name,'#FFFF66','ts','value',data.sensor.name,1);
+          gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Temperatur' + data.sensor.name,'#6699F0','ts','value',data.sensor.name,1);
         } else {
-          gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Relativ luftfuktighet' + data.sensor.name,'#666666','ts','value',data.sensor.name,2);
+          gen_chart_json(hGraphos['sensor'+data.sensor.id],'sensor'+data.sensor.id+'_'+data.sensor.type,data.data,'Relativ luftfuktighet' + data.sensor.name,'#343536','ts','value',data.sensor.name,2);
         }
       }
 
@@ -209,7 +209,7 @@
           }
 
           // Update
-          gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#FFFF66','time_start','energy',1);
+          gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#6699F0','time_start','energy','Total',1);
 
         }
       }
