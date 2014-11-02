@@ -205,7 +205,7 @@
           $('#eliq_dataday').html('<h4>Förbrukning dygn</h4><h2>'+power+' '+unit);
 
           if (hGraphos['eliq_dataday'] == undefined) {
-            hGraphos['eliq_dataday'] = new Grapho( { place: 'eliq_chart_dataday' } );
+            hGraphos['eliq_dataday'] = new Grapho( { place: 'eliq_chart_dataday', margin: 10 } );
           }
 
           // Update
