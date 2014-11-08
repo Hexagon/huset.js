@@ -60,7 +60,7 @@ function gen_chart_json(curGrapho,dest,d1,title,color,prop1,prop2,series,axis) {
 				labelFont: '10px Droid Sans',
 				labelFormat: (dest === 'eliq_chart_dataday') ? Grapho.formats.default : labelFormat,
 				showGridLines: (axis===1) ? true : false,
-				extra: 2,
+				extra: 1,
 				name: title,
 				min: (dest === 'eliq_chart_dataday') ? 250 : 'auto',
 				labels: true
