@@ -93,7 +93,7 @@ strong {
 .box-h-300 {height:295px;}
 .box-h-400 {height:395px;}
 .box-h-500 {height:495px;}
-
+.box-h-adaptive {height:auto;}
 .box-w-80 {width:75px;}
 .box-w-120 {width:115px;}
 
@@ -228,4 +228,5 @@ strong {
 
 .has-switch {
 	margin-top:5px;
+	height:18px;
 }

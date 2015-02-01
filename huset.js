@@ -84,7 +84,7 @@ datasource.Init(function(){
 
               // Get min/max
               var ts = Math.round((new Date()).getTime() / 1000)-3600*24;
-              var statement_inner = datasource.db.prepare("SELECT min(value) as val_min, max(value) as val_max FROM telldus_sensor_history WHERE id=? AND type=? AND ts>"+ts);
+              var statement_inner = datasource.db.prepare("SELECT min(value) as val_min, max(value) as val_max FROM telldus_sensor_history WHERE id=? AND type=? AND ts>"+ts+" AND value IS NOT NULL");
               statement_inner.each(
                 [row.id,row.type],
                 function(err_inner,row_inner) {

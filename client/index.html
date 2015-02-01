@@ -1,4 +1,4 @@
-<!doctype html>
+'<!doctype html>
 <html>
   <head>
 
@@ -220,7 +220,9 @@
           }
 
           // Update
-          gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#6699F0','time_end','energy','Total',1);
+          if (data.data && data.data.length > 0) {
+	    gen_chart_json(hGraphos['eliq_dataday'],'eliq_chart_dataday',data.data,'Elförbrukning','#6699F0','time_end','energy','Total',1);
+	  }
 
         }
       }
